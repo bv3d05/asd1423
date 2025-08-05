@@ -1,237 +1,73 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kill Menu</title>
+    <title>قائمة الموت السريع</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Arial', sans-serif;
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            direction: rtl;
-            overflow: hidden;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        .menu-container {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        .container {
             text-align: center;
-            min-width: 350px;
-            animation: slideIn 0.5s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .menu-title {
-            font-size: 28px;
-            margin-bottom: 25px;
-            color: #fff;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
-            font-weight: bold;
-        }
-        
-        .kill-button {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            margin: 15px;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
-        }
-        
-        .kill-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 24px rgba(255, 107, 107, 0.5);
-            background: linear-gradient(135deg, #ff5252, #d63031);
-        }
-        
-        .kill-button:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-        
-        .close-button {
-            background: linear-gradient(135deg, #74b9ff, #0984e3);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(116, 185, 255, 0.3);
-        }
-        
-        .close-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(116, 185, 255, 0.5);
-        }
-        
-        .warning {
-            color: #ffeaa7;
-            font-size: 16px;
-            margin-bottom: 25px;
-            background: rgba(255, 234, 167, 0.15);
-            padding: 15px;
+            background-color: #2c3e50;
+            padding: 30px;
             border-radius: 10px;
-            border-right: 5px solid #ffeaa7;
-            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+            transition: transform 0.3s ease;
         }
-        
-        .status {
-            margin-top: 20px;
-            padding: 10px;
+        h2 {
+            margin-top: 0;
+            color: #ecf0f1;
+            font-weight: 300;
+        }
+        #killButton {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
             border-radius: 5px;
-            font-weight: bold;
-            display: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        
-        .status.success {
-            background: rgba(0, 255, 0, 0.2);
-            color: #00ff00;
-            border: 1px solid #00ff00;
+        #killButton:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
         }
-        
-        .status.error {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff0000;
-            border: 1px solid #ff0000;
+        #killButton:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
-    <div class="menu-container">
-        <h2 class="menu-title">⚔️ قائمة القتل ⚔️</h2>
-        <div class="warning">
-            ⚠️ تحذير: هذا الإجراء سيؤدي إلى موت شخصيتك فوراً!
-        </div>
-        <button class="kill-button" onclick="killPlayer()">
-            💀 قتل الشخصية الآن
-        </button>
-        <br>
-        <button class="close-button" onclick="closeMenu()">
-            ✖️ إلغاء وإغلاق
-        </button>
-        <div id="status" class="status"></div>
+    <div class="container">
+        <h2>قائمة الموت السريع</h2>
+        <p>اضغط على زر **Enter** لتموت.</p>
+        <button id="killButton">اضغط لتموت</button>
     </div>
 
     <script>
-        console.log("🚀 تم تحميل قائمة القتل");
-        
-        function showStatus(message, type = 'success') {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = message;
-            statusDiv.className = `status ${type}`;
-            statusDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 3000);
+        function sendKillMessage() {
+            const message = { action: 'kill_player' };
+            // هنا نستخدم الدالة التي تم حقنها من MachoDUI
+            // يجب أن يتم تعريفها في MachoInjectJavaScript
+            sendLuaMessage(message);
         }
-        
-        function killPlayer() {
-            console.log("💀 محاولة قتل اللاعب...");
-            showStatus("جاري قتل الشخصية...", 'success');
-            
-            try {
-                // إرسال رسالة لـ Lua عبر Macho DUI
-                const message = {
-                    action: "kill_player",
-                    timestamp: Date.now()
-                };
-                
-                console.log("📤 إرسال رسالة:", JSON.stringify(message));
-                
-                // إرسال الرسالة لـ FiveM
-                if (window.postMessage) {
-                    window.postMessage(JSON.stringify(message), "*");
-                }
-                
-                // طريقة إضافية للتأكد
-                if (window.parent && window.parent.postMessage) {
-                    window.parent.postMessage(JSON.stringify(message), "*");
-                }
-                
-                console.log("✅ تم إرسال طلب القتل بنجاح");
-                
-            } catch (error) {
-                console.error("❌ خطأ في إرسال طلب القتل:", error);
-                showStatus("خطأ في إرسال الطلب!", 'error');
-            }
-        }
-        
-        function closeMenu() {
-            console.log("🚪 إغلاق القائمة...");
-            showStatus("جاري الإغلاق...", 'success');
-            
-            try {
-                const message = {
-                    action: "close_menu",
-                    timestamp: Date.now()
-                };
-                
-                console.log("📤 إرسال رسالة إغلاق:", JSON.stringify(message));
-                
-                if (window.postMessage) {
-                    window.postMessage(JSON.stringify(message), "*");
-                }
-                
-                if (window.parent && window.parent.postMessage) {
-                    window.parent.postMessage(JSON.stringify(message), "*");
-                }
-                
-                console.log("✅ تم إرسال طلب الإغلاق");
-                
-            } catch (error) {
-                console.error("❌ خطأ في إغلاق القائمة:", error);
-            }
-        }
-        
-        // إغلاق القائمة عند الضغط على ESC
+
+        document.getElementById('killButton').addEventListener('click', function() {
+            sendKillMessage();
+        });
+
         document.addEventListener('keydown', function(event) {
-            console.log("⌨️ تم الضغط على مفتاح:", event.key);
-            if (event.key === 'Escape') {
-                closeMenu();
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                sendKillMessage();
             }
         });
-        
-        // لمراقبة الرسائل الواردة (للتشخيص)
-        window.addEventListener('message', function(event) {
-            console.log("📨 رسالة مستلمة في HTML:", event.data);
-        });
-        
-        // تشخيص إضافي
-        console.log("🔧 معلومات التشخيص:");
-        console.log("- window.postMessage موجود:", !!window.postMessage);
-        console.log("- window.parent موجود:", !!window.parent);
-        console.log("- URL الحالي:", window.location.href);
     </script>
 </body>
 </html>
