@@ -1,0 +1,70 @@
+local myDui = nil
+local url = "nui://your_resource_name/index.html" -- غيّر 'your_resource_name' إلى اسم المجلد الخاص بك
+local isDuiVisible = false
+
+-- الدالة الرئيسية لإنشاء الواجهة الرسومية
+function createMyDui()
+    if myDui == nil then
+        myDui = MachoCreateDui(url)
+    end
+end
+
+-- لإظهار الواجهة الرسومية
+function showMyDui()
+    if myDui ~= nil and not isDuiVisible then
+        MachoShowDui(myDui)
+        isDuiVisible = true
+        SetNuiFocus(true, true) -- يركز على الواجهة الرسومية ويمنع تحكم اللاعب
+    end
+end
+
+-- لإخفاء الواجهة الرسومية
+function hideMyDui()
+    if myDui ~= nil and isDuiVisible then
+        MachoHideDui(myDui)
+        isDuiVisible = false
+        SetNuiFocus(false, false)
+    end
+end
+
+-- الدالة التي تستمع للرسائل القادمة من الواجهة الرسومية
+function onDuiMessage(dui, message)
+    if dui == myDui then
+        local data = json.decode(message)
+        
+        if data and data.action == "kill_player" then
+            print("اللاعب ضغط على زر الموت!")
+            -- هنا نستخدم أمر FiveM الأصلي لقتل الشخصية
+            SetEntityHealth(PlayerPedId(), 0)
+            
+            -- بعد تنفيذ الأمر، يمكن إخفاء الواجهة تلقائيًا
+            hideMyDui()
+        end
+    end
+end
+
+-- ربط الدالة بحدث استقبال الرسائل
+AddEventHandler('MachoDuiMessage', onDuiMessage)
+
+-- أمر الدردشة لإظهار/إخفاء القائمة
+RegisterCommand("killmenu", function()
+    if not isDuiVisible then
+        showMyDui()
+    else
+        hideMyDui()
+    end
+end, false)
+
+-- يمكنك أيضًا استخدام زر معين لفتح وإغلاق القائمة (مثال على استخدام Z)
+Citizen.CreateThread(function()
+    while true do
+        Wait(0)
+        if IsControlJustReleased(0, 20) then -- 20 هو مفتاح Z
+            if not isDuiVisible then
+                showMyDui()
+            else
+                hideMyDui()
+            end
+        end
+    end
+end)
