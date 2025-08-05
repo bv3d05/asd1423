@@ -8,7 +8,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5); /* خلفية شفافة */
+            background-color: rgba(0, 0, 0, 0.5);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .container {
@@ -47,13 +47,28 @@
 <body>
     <div class="container">
         <h2>قائمة الموت السريع</h2>
+        <p>اضغط على زر **Enter** لتموت.</p>
         <button id="killButton">اضغط لتموت</button>
     </div>
 
     <script>
-        document.getElementById('killButton').addEventListener('click', function() {
+        // دالة لإرسال الرسالة إلى Lua
+        function sendKillMessage() {
             const message = { type: 'button_press', action: 'kill_player' };
             MachoSendDuiMessage(JSON.stringify(message));
+        }
+
+        // الاستماع لحدث الضغط على الماوس
+        document.getElementById('killButton').addEventListener('click', function() {
+            sendKillMessage();
+        });
+
+        // الاستماع لحدث الضغط على لوحة المفاتيح
+        document.addEventListener('keydown', function(event) {
+            // تحقق إذا كان المفتاح المضغوط هو 'Enter' (رمز 13)
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                sendKillMessage();
+            }
         });
     </script>
 </body>
