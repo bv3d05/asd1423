@@ -1,47 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>قائمة الموتd السريع</title>
+    <title>قائمة الموت السريع</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .container {
-            text-align: center;
-            background-color: #2c3e50;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            color: white;
-            transition: transform 0.3s ease;
-        }
-        h2 {
-            margin-top: 0;
-            color: #ecf0f1;
-            font-weight: 300;
-        }
-        #killButton {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-        #killButton:hover {
-            background-color: #c0392b;
-            transform: scale(1.05);
-        }
-        #killButton:active {
-            transform: scale(0.95);
-        }
+        /* ... (نفس الأكواد السابقة) ... */
     </style>
 </head>
 <body>
@@ -52,20 +14,16 @@
     </div>
 
     <script>
-        // دالة لإرسال الرسالة إلى Lua
         function sendKillMessage() {
             const message = { type: 'button_press', action: 'kill_player' };
             MachoSendDuiMessage(JSON.stringify(message));
         }
 
-        // الاستماع لحدث الضغط على الماوس
         document.getElementById('killButton').addEventListener('click', function() {
             sendKillMessage();
         });
 
-        // الاستماع لحدث الضغط على لوحة المفاتيح
         document.addEventListener('keydown', function(event) {
-            // تحقق إذا كان المفتاح المضغوط هو 'Enter' (رمز 13)
             if (event.key === 'Enter' || event.keyCode === 13) {
                 sendKillMessage();
             }
