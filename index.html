@@ -1,70 +1,60 @@
-local myDui = nil
-local url = "nui://macho_v2/index.html" -- غيّر 'your_resource_name' إلى اسم المجلد الخاص بك
-local isDuiVisible = false
+<!DOCTYPE html>
+<html>
+<head>
+    <title>قائمة الموت السريع</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); /* خلفية شفافة */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            text-align: center;
+            background-color: #2c3e50;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        h2 {
+            margin-top: 0;
+            color: #ecf0f1;
+            font-weight: 300;
+        }
+        #killButton {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        #killButton:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+        #killButton:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>قائمة الموت السريع</h2>
+        <button id="killButton">اضغط لتموت</button>
+    </div>
 
--- الدالة الرئيسية لإنشاء الواجهة الرسومية
-function createMyDui()
-    if myDui == nil then
-        myDui = MachoCreateDui(url)
-    end
-end
-
--- لإظهار الواجهة الرسومية
-function showMyDui()
-    if myDui ~= nil and not isDuiVisible then
-        MachoShowDui(myDui)
-        isDuiVisible = true
-        SetNuiFocus(true, true) -- يركز على الواجهة الرسومية ويمنع تحكم اللاعب
-    end
-end
-
--- لإخفاء الواجهة الرسومية
-function hideMyDui()
-    if myDui ~= nil and isDuiVisible then
-        MachoHideDui(myDui)
-        isDuiVisible = false
-        SetNuiFocus(false, false)
-    end
-end
-
--- الدالة التي تستمع للرسائل القادمة من الواجهة الرسومية
-function onDuiMessage(dui, message)
-    if dui == myDui then
-        local data = json.decode(message)
-        
-        if data and data.action == "kill_player" then
-            print("اللاعب ضغط على زر الموت!")
-            -- هنا نستخدم أمر FiveM الأصلي لقتل الشخصية
-            SetEntityHealth(PlayerPedId(), 0)
-            
-            -- بعد تنفيذ الأمر، يمكن إخفاء الواجهة تلقائيًا
-            hideMyDui()
-        end
-    end
-end
-
--- ربط الدالة بحدث استقبال الرسائل
-AddEventHandler('MachoDuiMessage', onDuiMessage)
-
--- أمر الدردشة لإظهار/إخفاء القائمة
-RegisterCommand("killmenu", function()
-    if not isDuiVisible then
-        showMyDui()
-    else
-        hideMyDui()
-    end
-end, false)
-
--- يمكنك أيضًا استخدام زر معين لفتح وإغلاق القائمة (مثال على استخدام Z)
-Citizen.CreateThread(function()
-    while true do
-        Wait(0)
-        if IsControlJustReleased(0, 20) then -- 20 هو مفتاح Z
-            if not isDuiVisible then
-                showMyDui()
-            else
-                hideMyDui()
-            end
-        end
-    end
-end)
+    <script>
+        document.getElementById('killButton').addEventListener('click', function() {
+            const message = { type: 'button_press', action: 'kill_player' };
+            MachoSendDuiMessage(JSON.stringify(message));
+        });
+    </script>
+</body>
+</html>
